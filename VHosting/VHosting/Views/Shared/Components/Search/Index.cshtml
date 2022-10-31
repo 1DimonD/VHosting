@@ -1,0 +1,19 @@
+﻿@model List<object>
+
+@{
+    var arr = "";
+    @foreach(var obj in Model)
+    {
+        @if(obj is User)
+        {
+            arr += "\"" + (obj as User)?.Nickname + "\", ";
+        }
+        @if(obj is Video)
+        {
+            arr += "\"" + (obj as Video)?.Name + "\", ";
+        }
+    }
+
+}
+
+@Html.Raw(@arr)

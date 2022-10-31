@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VHosting</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap_flatly.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/VHosting.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 justify-content-between">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VHosting</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="flex-grow-1 mx-3">
+                    @using (Html.BeginForm("Search", "Search", FormMethod.Post))
+                    {
+                        <input type="text" placeholder="Type here" style="width: 90%;" id="searched" name="searched" />
+                        <button type="submit" class="bi-search" style="border: 0px;"></button>
+                    }       
+                </div>
+            </div>
+            <div class="navbar-collapse collapse">
+                @if(User.Identity.IsAuthenticated)
+                {
+                    @using (Html.BeginForm("Index", "Users", FormMethod.Post))
+                    {
+                        <button type="submit" style="border: 0px; background: #FFFFFF;">
+                            <i class="bi-person-circle me-2 d-inline" style="font-size: 2rem;"></i>
+                            <div class="h5 me-3 my-0 fw-bold">@User.Identity.Name</div>
+                        </button>
+                    }
+                    <form method="post" asp-controller="Account" asp-action="Logout">
+                        <button class="btn btn-secondary me-3" type="submit">Leave</button>
+                    </form>
+                }
+                else
+                {
+                    <div class="me-3"><button class="btn btn-primary" type="button" onclick="location.href='@Url.Action("Login", "Account")'">Вхід</button></div>
+                    <button class="btn btn-secondary me-3" type="button" onclick="location.href='@Url.Action("Register", "Account")'">Реєстація</button>
+                }
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - VHosting - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $( function() {
+    var availableTags = [
+        @await Component.InvokeAsync("Search")
+    ];
+    $( "#searched" ).autocomplete({
+      source: availableTags,
+      delay: 500,
+      minLength: 3
+    });
+  } );
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
